@@ -76,6 +76,7 @@ class EmergencyCard extends StatelessWidget {
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
           const SizedBox(width: 8),
@@ -118,33 +119,36 @@ class EmergencyCard extends StatelessWidget {
   }
 
   Widget _buildAcceptButton() {
-    return ElevatedButton(
-      onPressed: isAcceptingHelp ? null : onAcceptHelp,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        minimumSize: Size.zero,
-        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        shape: const RoundedRectangleBorder(),
-        elevation: 0,
+    return Flexible(
+      child: ElevatedButton(
+        onPressed: isAcceptingHelp ? null : onAcceptHelp,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.white,
+          foregroundColor: Colors.black,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          minimumSize: Size.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          shape: const RoundedRectangleBorder(),
+          elevation: 0,
+        ),
+        child: isAcceptingHelp
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.black,
+                ),
+              )
+            : const Text(
+                'ACEPTAR AYUDA',
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
       ),
-      child: isAcceptingHelp
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.black,
-              ),
-            )
-          : const Text(
-              'ACEPTAR AYUDA',
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
     );
   }
 
@@ -166,25 +170,30 @@ class EmergencyCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Wrap(
-          spacing: 8,
-          runSpacing: 4,
-          children: products.entries.map((entry) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                border: Border.all(color: Colors.grey[300]!),
-              ),
-              child: Text(
-                '${entry.key}: ${entry.value}',
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontSize: 12,
-                ),
-              ),
+        LayoutBuilder(
+          builder: (context, constraints) {
+            return Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: products.entries.map((entry) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[100],
+                    border: Border.all(color: Colors.grey[300]!),
+                  ),
+                  child: Text(
+                    '${entry.key}: ${entry.value}',
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                );
+              }).toList(),
             );
-          }).toList(),
+          },
         ),
       ],
     );

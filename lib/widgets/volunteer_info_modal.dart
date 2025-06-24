@@ -167,26 +167,34 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isSmallScreen = screenSize.width < 400 || screenSize.height < 600;
+    
     return Dialog(
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(),
       child: Container(
-        constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
-        padding: const EdgeInsets.all(24),
+        constraints: BoxConstraints(
+          maxWidth: isSmallScreen ? screenSize.width * 0.95 : 500,
+          maxHeight: isSmallScreen ? screenSize.height * 0.9 : 600,
+        ),
+        width: isSmallScreen ? screenSize.width * 0.95 : null,
+        margin: isSmallScreen ? const EdgeInsets.symmetric(horizontal: 8.0) : null,
+        padding: EdgeInsets.all(isSmallScreen ? 16 : 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Text(
+            Text(
               'Envía tu información al solicitante',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: isSmallScreen ? 18 : 20,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 24),
+            SizedBox(height: isSmallScreen ? 16 : 24),
             
             Expanded(
               child: Form(
@@ -250,6 +258,7 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
                       
                       DropdownButtonFormField<String>(
                         value: _selectedArea,
+                        isExpanded: true,
                         decoration: const InputDecoration(
                           labelText: 'Área de especialización',
                           border: OutlineInputBorder(),
@@ -260,7 +269,14 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
                         items: _getAreaOptions.map((String area) {
                           return DropdownMenuItem<String>(
                             value: area,
-                            child: Text(area),
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 8.0),
+                              child: Text(
+                                area,
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                              ),
+                            ),
                           );
                         }).toList(),
                         onChanged: (String? newValue) {
@@ -294,6 +310,7 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
                                         : Colors.black,
                                     fontSize: 16,
                                   ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
@@ -304,7 +321,7 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
                       
                       TextFormField(
                         controller: _informacionAdicionalController,
-                        maxLines: 3,
+                        maxLines: isSmallScreen ? 2 : 3,
                         decoration: const InputDecoration(
                           labelText: 'Información adicional',
                           border: OutlineInputBorder(),
@@ -326,44 +343,83 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
               ),
             ),
             
-            const SizedBox(height: 24),
+            SizedBox(height: isSmallScreen ? 16 : 24),
             
-            Row(
-              children: [
-                Expanded(
-                  child: TextButton(
-                    onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
-                    style: TextButton.styleFrom(
-                      foregroundColor: Colors.grey,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: const Text('Cancelar'),
+            isSmallScreen
+                ? Column(
+                    children: [
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: _isSubmitting ? null : _handleSubmit,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            shape: const RoundedRectangleBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: _isSubmitting
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Enviar información'),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      SizedBox(
+                        width: double.infinity,
+                        child: TextButton(
+                          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text('Cancelar'),
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      Expanded(
+                        child: TextButton(
+                          onPressed: _isSubmitting ? null : () => Navigator.of(context).pop(),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.grey,
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text('Cancelar'),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: _isSubmitting ? null : _handleSubmit,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            foregroundColor: Colors.white,
+                            shape: const RoundedRectangleBorder(),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: _isSubmitting
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text('Enviar información'),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _isSubmitting ? null : _handleSubmit,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                      foregroundColor: Colors.white,
-                      shape: const RoundedRectangleBorder(),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: _isSubmitting
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : const Text('Enviar información'),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),

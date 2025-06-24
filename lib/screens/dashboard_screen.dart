@@ -149,22 +149,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Row(
-          children: [
-            Text(
-              widget.user.roleIcon,
-              style: const TextStyle(fontSize: 24),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              widget.user.displayName,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ],
+        title: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenWidth = MediaQuery.of(context).size.width;
+            final isSmallScreen = screenWidth < 360;
+            
+            return Row(
+              children: [
+                Text(
+                  widget.user.roleIcon,
+                  style: const TextStyle(fontSize: 24),
+                ),
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Text(
+                    widget.user.displayName,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: isSmallScreen ? 18 : 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
         actions: [
           IconButton(
