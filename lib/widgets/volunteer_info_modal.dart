@@ -173,13 +173,16 @@ class _VolunteerInfoModalState extends State<VolunteerInfoModal> {
     return Dialog(
       backgroundColor: Colors.white,
       shape: const RoundedRectangleBorder(),
+      insetPadding: EdgeInsets.symmetric(
+        horizontal: isSmallScreen ? 12.0 : 24.0,
+        vertical: isSmallScreen ? 20.0 : 40.0,
+      ),
       child: Container(
         constraints: BoxConstraints(
-          maxWidth: isSmallScreen ? screenSize.width * 0.95 : 500,
-          maxHeight: isSmallScreen ? screenSize.height * 0.9 : 600,
+          maxWidth: isSmallScreen ? screenSize.width : 500,
+          maxHeight: isSmallScreen ? screenSize.height * 0.95 : 600,
         ),
-        width: isSmallScreen ? screenSize.width * 0.95 : null,
-        margin: isSmallScreen ? const EdgeInsets.symmetric(horizontal: 8.0) : null,
+        width: isSmallScreen ? double.infinity : null,
         padding: EdgeInsets.all(isSmallScreen ? 16 : 24),
         child: Column(
           mainAxisSize: MainAxisSize.min,
