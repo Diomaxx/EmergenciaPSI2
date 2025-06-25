@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import '../models/emergency_request.dart';
 
 class ApiService {
-  static const String _baseUrl = 'http://34.123.227.162:8080/api';
+  static const String _baseUrl = 'https://dasalas.shop:8443/api';
   static const String _emergencyRequestsEndpoint = '/solicitudes/apoyo';
 
   static Future<List<EmergencyRequest>> fetchEmergencyRequests() async {
